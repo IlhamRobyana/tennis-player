@@ -3,6 +3,7 @@ package helper
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -14,7 +15,7 @@ func GenerateToken(player entity.Player) (token string, e error) {
 	claims := t.Claims.(jwt.MapClaims)
 	exp := time.Now().Add(time.Hour * 24 * 7)
 	claims["username"] = player.Username
-	claims["id"] = player.ID
+	claims["id"] = strconv.FormatUint(player.ID, 10)
 	claims["exp"] = exp.Unix()
 
 	secret := os.Getenv("TOKEN_SECRET")

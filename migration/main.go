@@ -27,12 +27,16 @@ func migrateScheme(DB *gorm.DB) {
 
 	isTableDropped := os.Getenv("DROP_TABLE")
 	if isTableDropped == "true" {
+		DB.Model(&entity.Container{}).RemoveForeignKey("player_id", "players(id)")
 		DB.DropTableIfExists(
 			&entity.Player{},
+			&entity.Container{},
 		)
 	}
 
 	DB.AutoMigrate(
 		&entity.Player{},
+		&entity.Container{},
 	)
+	DB.Model(&entity.Container{}).AddForeignKey("player_id", "players(id)", "RESTRICT", "RESTRICT")
 }

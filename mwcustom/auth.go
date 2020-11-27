@@ -3,6 +3,7 @@ package mwcustom
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -28,7 +29,7 @@ func Authorization(next echo.HandlerFunc) echo.HandlerFunc {
 
 		err = setAuthData(c, tokenClaims)
 		if err != nil {
-			c.NoContent(http.StatusBadRequest)
+			c.JSON(http.StatusBadRequest, map[string]interface{}{"message": err.Error()})
 			return nil
 		}
 
@@ -55,11 +56,15 @@ func setAuthData(c echo.Context, claims jwt.MapClaims) error {
 
 	c.Set("username", username)
 
-	id, ok := claims["id"].(string)
+	strid, ok := claims["id"].(string)
 	if !ok {
 		return errors.New("id is not available")
 	}
 
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		return errors.New("convert failed")
+	}
 	c.Set("id", id)
 
 	return nil
