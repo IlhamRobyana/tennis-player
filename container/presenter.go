@@ -30,7 +30,15 @@ func Create(c echo.Context) (e error) {
 }
 
 func PutBall(c echo.Context) (e error) {
-	return
+	containerCore := getCore()
+	playerID := c.Get("id").(uint64)
+	updatedID, err := containerCore.putBall(playerID)
+	if err != nil {
+		httpStatus := http.StatusInternalServerError
+		return c.JSON(httpStatus, map[string]interface{}{"message": err.Error})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{"updated_container": updatedID})
 }
 
 func getCore() (c *core) {

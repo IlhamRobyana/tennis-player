@@ -13,3 +13,8 @@ func (c *core) create(container entity.Container) (createdContainer entity.Conta
 	createdContainer, e = c.containerStorage.Create(container)
 	return
 }
+
+func (c *core) putBall(playerID uint64) (updatedID uint64, e error) {
+	updatedID, e = c.containerStorage.PutBall(playerID)
+	return
+}
