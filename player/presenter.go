@@ -46,7 +46,18 @@ func Login(c echo.Context) (e error) {
 }
 
 func Play(c echo.Context) (e error) {
-	return
+	playerID := c.Get("id").(uint64)
+	playerCore := getCore()
+	containers, err := playerCore.play(playerID)
+	if err != nil {
+		httpStatus := http.StatusInternalServerError
+		return c.JSON(httpStatus, map[string]interface{}{"message": err.Error})
+	} else if len(containers) == 0 {
+		httpStatus := http.StatusOK
+		return c.JSON(httpStatus, map[string]interface{}{"message": "No Container is filled yet"})
+	}
+	response := entity.PlayResponse{"You can play tennis with the following containers", containers}
+	return c.JSON(http.StatusOK, response)
 }
 
 func getCore() (c *core) {
@@ -55,8 +66,10 @@ func getCore() (c *core) {
 	if c == nil {
 		c = new(core)
 		playerStorage, _ := storage.GetPlayerStorage(storage.Postgre)
+		containerStorage, _ := storage.GetContainerStorage(storage.Postgre)
 
 		c.playerStore = playerStorage
+		c.containerStore = containerStorage
 		coreInstance = c
 	}
 

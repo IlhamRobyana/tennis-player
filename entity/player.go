@@ -27,3 +27,9 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Token string `json:"token"`
 }
+
+// PlayResponse holds information of response body on success play
+type PlayResponse struct {
+	Message    string      `json:"message"`
+	Containers []Container `json:"container"`
+}

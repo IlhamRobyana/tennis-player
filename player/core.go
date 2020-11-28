@@ -10,7 +10,8 @@ import (
 )
 
 type core struct {
-	playerStore storage.PlayerStorage
+	playerStore    storage.PlayerStorage
+	containerStore storage.ContainerStorage
 }
 
 func (c *core) signup(player entity.Player) (response entity.LoginResponse, e error) {
@@ -35,5 +36,10 @@ func (c *core) login(username, password string) (response entity.LoginResponse, 
 		e = errors.New("Username or Password is wrong")
 	}
 	response.Token, e = helper.GenerateToken(player)
+	return
+}
+
+func (c *core) play(playerID uint64) (containers []entity.Container, e error) {
+	containers, e = c.containerStore.GetFilledContainers(playerID)
 	return
 }

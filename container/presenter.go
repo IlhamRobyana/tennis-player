@@ -30,8 +30,8 @@ func Create(c echo.Context) (e error) {
 }
 
 func PutBall(c echo.Context) (e error) {
-	containerCore := getCore()
 	playerID := c.Get("id").(uint64)
+	containerCore := getCore()
 	updatedID, err := containerCore.putBall(playerID)
 	if err != nil {
 		httpStatus := http.StatusInternalServerError
