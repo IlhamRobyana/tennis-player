@@ -3,7 +3,6 @@ package player
 import (
 	"net/http"
 
-	"github.com/hipeid/backend/errcode"
 	"github.com/ilhamrobyana/tennis-player/entity"
 	pg "github.com/ilhamrobyana/tennis-player/pg_storage"
 	"github.com/labstack/echo"
@@ -22,9 +21,7 @@ func Signup(c echo.Context) (e error) {
 	response, e := playerCore.signup(player)
 	if e != nil {
 		httpStatus := http.StatusInternalServerError
-		if e.Error() == errcode.UserExists {
-			httpStatus = http.StatusBadRequest
-		}
+
 		return c.JSON(httpStatus, map[string]interface{}{"message": e.Error()})
 	}
 	return c.JSON(http.StatusCreated, response)
