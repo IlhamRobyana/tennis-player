@@ -48,15 +48,16 @@ func Login(c echo.Context) (e error) {
 func Play(c echo.Context) (e error) {
 	playerID := c.Get("id").(uint64)
 	playerCore := getCore()
-	containers, err := playerCore.play(playerID)
+	container, err := playerCore.play(playerID)
 	if err != nil {
 		httpStatus := http.StatusInternalServerError
+		if container.ID == 0 {
+			httpStatus := http.StatusOK
+			return c.JSON(httpStatus, map[string]interface{}{"message": "No Container is filled yet"})
+		}
 		return c.JSON(httpStatus, map[string]interface{}{"message": err.Error})
-	} else if len(containers) == 0 {
-		httpStatus := http.StatusOK
-		return c.JSON(httpStatus, map[string]interface{}{"message": "No Container is filled yet"})
 	}
-	response := entity.PlayResponse{"You can play tennis with the following containers", containers}
+	response := entity.PlayResponse{"You played tennis with the following container, the balls are resetted to 0", container}
 	return c.JSON(http.StatusOK, response)
 }
 

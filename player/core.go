@@ -39,7 +39,7 @@ func (c *core) login(username, password string) (response entity.LoginResponse, 
 	return
 }
 
-func (c *core) play(playerID uint64) (containers []entity.Container, e error) {
-	containers, e = c.containerStore.GetFilledContainers(playerID)
+func (c *core) play(playerID uint64) (container entity.Container, e error) {
+	container, e = c.containerStore.GetFilledContainer(playerID)
 	return
 }

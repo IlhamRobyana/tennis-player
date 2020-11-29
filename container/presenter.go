@@ -36,6 +36,8 @@ func PutBall(c echo.Context) (e error) {
 	if err != nil {
 		httpStatus := http.StatusInternalServerError
 		return c.JSON(httpStatus, map[string]interface{}{"message": err.Error})
+	} else if updatedID == 0 {
+		return c.JSON(http.StatusOK, map[string]interface{}{"message": "all containers are already filled"})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{"updated_container": updatedID})

@@ -51,7 +51,7 @@ func (c *Container) PutBall(playerID uint64) (updatedID uint64, e error) {
 	return
 }
 
-func (c *Container) GetFilledContainers(playerID uint64) (containerList []entity.Container, e error) {
+func (c *Container) GetFilledContainer(playerID uint64) (container entity.Container, e error) {
 	client, e := GetPGClient()
 	defer client.Close()
 
@@ -60,7 +60,15 @@ func (c *Container) GetFilledContainers(playerID uint64) (containerList []entity
 	}
 	e = client.
 		Where("player_id=? AND balls = capacity", playerID).
-		Find(&containerList).
+		First(&container).
+		Error
+	if e != nil {
+		return
+	}
+	e = client.
+		Model(&container).
+		Where("id=?", container.ID).
+		Update("balls", 0).
 		Error
 	return
 }

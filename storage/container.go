@@ -10,7 +10,7 @@ import (
 type ContainerStorage interface {
 	Create(container entity.Container) (entity.Container, error)
 	PutBall(playerID uint64) (uint64, error)
-	GetFilledContainers(playerID uint64) ([]entity.Container, error)
+	GetFilledContainer(playerID uint64) (entity.Container, error)
 }
 
 func GetContainerStorage(n int) (ContainerStorage, error) {

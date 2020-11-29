@@ -30,6 +30,6 @@ type LoginResponse struct {
 
 // PlayResponse holds information of response body on success play
 type PlayResponse struct {
-	Message    string      `json:"message"`
-	Containers []Container `json:"container"`
+	Message   string    `json:"message"`
+	Container Container `json:"container"`
 }
