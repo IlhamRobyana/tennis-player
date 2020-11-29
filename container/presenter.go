@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ilhamrobyana/tennis-player/entity"
-	"github.com/ilhamrobyana/tennis-player/storage"
+	pg "github.com/ilhamrobyana/tennis-player/pg_storage"
 	"github.com/labstack/echo"
 )
 
@@ -48,9 +48,7 @@ func getCore() (c *core) {
 
 	if c == nil {
 		c = new(core)
-		containerStorage, _ := storage.GetContainerStorage(storage.Postgre)
-
-		c.containerStorage = containerStorage
+		c.containerStorage = pg.Container{}
 		coreInstance = c
 	}
 

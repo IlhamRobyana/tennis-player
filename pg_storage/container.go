@@ -4,33 +4,22 @@ import (
 	"math/rand"
 
 	"github.com/ilhamrobyana/tennis-player/entity"
+	"github.com/jinzhu/gorm"
 )
 
-type Container struct{}
+type Container struct {
+	Client *gorm.DB
+}
 
 func (c *Container) Create(container entity.Container) (entity.Container, error) {
-	client, e := GetPGClient()
-	defer client.Close()
-
-	if e != nil {
-		return entity.Container{}, e
-	}
-
-	e = client.Create(&container).Error
+	e := c.Client.Create(&container).Error
 	return container, e
 }
 
 func (c *Container) PutBall(playerID uint64) (updatedID uint64, e error) {
-	client, e := GetPGClient()
-	defer client.Close()
-
-	if e != nil {
-		return
-	}
-
 	containerList := new([]entity.Container)
 
-	e = client.
+	e = c.Client.
 		Where("player_id=? AND balls < capacity", playerID).
 		Find(&containerList).
 		Error
@@ -43,7 +32,7 @@ func (c *Container) PutBall(playerID uint64) (updatedID uint64, e error) {
 	updatingContainer.Balls++
 	updatedID = updatingContainer.ID
 
-	e = client.
+	e = c.Client.
 		Model(&updatingContainer).
 		Where("id=?", updatedID).
 		Updates(updatingContainer).
@@ -52,20 +41,14 @@ func (c *Container) PutBall(playerID uint64) (updatedID uint64, e error) {
 }
 
 func (c *Container) GetFilledContainer(playerID uint64) (container entity.Container, e error) {
-	client, e := GetPGClient()
-	defer client.Close()
-
-	if e != nil {
-		return
-	}
-	e = client.
+	e = c.Client.
 		Where("player_id=? AND balls = capacity", playerID).
 		First(&container).
 		Error
 	if e != nil {
 		return
 	}
-	e = client.
+	e = c.Client.
 		Model(&container).
 		Where("id=?", container.ID).
 		Update("balls", 0).

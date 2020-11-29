@@ -5,7 +5,7 @@ import (
 
 	"github.com/hipeid/backend/errcode"
 	"github.com/ilhamrobyana/tennis-player/entity"
-	"github.com/ilhamrobyana/tennis-player/storage"
+	pg "github.com/ilhamrobyana/tennis-player/pg_storage"
 	"github.com/labstack/echo"
 )
 
@@ -66,11 +66,8 @@ func getCore() (c *core) {
 
 	if c == nil {
 		c = new(core)
-		playerStorage, _ := storage.GetPlayerStorage(storage.Postgre)
-		containerStorage, _ := storage.GetContainerStorage(storage.Postgre)
-
-		c.playerStore = playerStorage
-		c.containerStore = containerStorage
+		c.playerStore = pg.Player{}
+		c.containerStore = pg.Container{}
 		coreInstance = c
 	}
 
