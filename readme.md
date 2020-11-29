@@ -17,7 +17,7 @@ And then migrate the data structure to PostgreSQL
 
 ## Running
 Go to the root folder of the project and enter the following:
-```go run auth.go```
+```go run main.go```
 
 ## Documentation
 The API documentation can be found in the following link:
